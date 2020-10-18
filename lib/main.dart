@@ -7,18 +7,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Course'),
-        backgroundColor: Colors.blue[900],
-      ),
-      body: Card(
-        child: Column(
-          children: <Widget>[
-            Image.asset('assets/food.jpg'),
-            Text('Food Paradise')
-          ],
-        ),
-      ),
-    ));
+            appBar: AppBar(
+              title: Text('Flutter Course'),
+              backgroundColor: Colors.blue[900],
+            ),
+            body: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.all(10.0),
+                    child: RaisedButton(
+                      child: Text('Add Product'),
+                      onPressed: () {},
+                  )
+                ),
+                Card(
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset('assets/food.jpg'),
+                      Text('Food Paradise')
+                    ],
+                  ),
+                )
+              ],
+            )));
   }
 }
