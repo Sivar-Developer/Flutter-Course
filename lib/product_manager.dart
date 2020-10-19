@@ -36,7 +36,7 @@ class _ProductManagerState extends State<ProductManager> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return ListView(children: [
       Container(
           margin: EdgeInsets.all(10.0),
           child: ProductControl(_addProduct),
