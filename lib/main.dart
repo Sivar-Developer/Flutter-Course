@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 
 import './product_manager.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Flutter Course'),
         ),
-        body: ProductManager(startingProduct: 'Food Tester Passed'),
+        body: ProductManager(),
       )
     );
   }
