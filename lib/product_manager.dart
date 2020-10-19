@@ -16,8 +16,13 @@ class _ProductManagerState extends State<ProductManager> {
 
   @override
   void initState() {
-    _products.add(widget.startingProduct);
     super.initState();
+    _products.add(widget.startingProduct);
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductManager oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -27,6 +32,8 @@ class _ProductManagerState extends State<ProductManager> {
           margin: EdgeInsets.all(10.0),
           child: RaisedButton(
             child: Text('Add Product'),
+            color: Theme.of(context).primaryColor,
+            textColor: Colors.white,
             onPressed: () {
               setState(() {
                 _products.add('Advanced food tester');
