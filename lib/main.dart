@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Flutter Course'),
         ),
-        body: ProductManager('Food Tester Passed'),
+        body: ProductManager(startingProduct: 'Food Tester Passed'),
       )
     );
   }
