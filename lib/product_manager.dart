@@ -13,7 +13,8 @@ class ProductManager extends StatefulWidget {
 }
 
 class _ProductManagerState extends State<ProductManager> {
-  List<String> _products = [];
+  final List<String> _products = [];
+  final age = 25;
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _ProductManagerState extends State<ProductManager> {
   void _addProduct(String product) {
     setState(() {
       _products.add(product);
+      age.round();
     });
   }
 
