@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
           title: Text('Flutter Course'),
           backgroundColor: Colors.blue[900],
         ),
-        body: ProductManager(),
+        body: ProductManager('Food Tester Passed'),
       )
     );
   }
