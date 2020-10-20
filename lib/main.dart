@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 
-import './product_manager.dart';
+import './pages/home.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -21,12 +21,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.deepOrange
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Flutter Course'),
-        ),
-        body: ProductManager(),
-      )
+      home: HomePage(),
     );
   }
 }
