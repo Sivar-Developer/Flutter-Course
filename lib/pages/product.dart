@@ -8,7 +8,11 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(onWillPop: () {
+      print('Back button pressed!');
+      Navigator.pop(context, false);
+      return Future.value(true);
+    }, child: Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
@@ -30,6 +34,7 @@ class ProductPage extends StatelessWidget {
             onPressed: () => Navigator.pop(context, true)
           )
       )],),
+      )
     );
   }
 }
