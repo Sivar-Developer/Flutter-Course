@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_course/pages/products.dart';
 
 import './pages/products_admin.dart';
+import './pages/products.dart';
 import './pages/product.dart';
 
 void main() {
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
         accentColor: Colors.deepOrange
       ),
       routes: {
-        '/': (BuildContext context) => ProductsPage(),
+        '/': (BuildContext context) => ProductsPage(_products, _addProduct, _deleteProduct),
         '/admin': (BuildContext context) => ProductsAdminPage()
       },
       onGenerateRoute: (RouteSettings settings) {
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
         }
         if (pathElement[1] == 'product') {
           final int index = int.parse(pathElement[2]);
-          return MaterialPageRoute(
+          return MaterialPageRoute<bool>(
                       builder: (BuildContext context) => ProductPage(_products[index]['title'], _products[index]['image'])
                     );
         }
