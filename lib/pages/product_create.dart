@@ -48,8 +48,9 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
             });
           },
         ),
+        SizedBox(height: 10.0,),
         RaisedButton(
-          color: Colors.deepPurple[400],
+          color: Theme.of(context).primaryColor,
           textColor: Colors.white,
           child: Text('Save'), 
           onPressed: () {
@@ -60,6 +61,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               'image': 'assets/food.jpg'
             };
             widget.addProduct(product);
+            Navigator.pushReplacementNamed(context, '/');
           },
         ),
       ],
