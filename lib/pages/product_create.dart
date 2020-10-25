@@ -51,6 +51,23 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
     );
   }
 
+  Widget _buildSaveButton() {
+    return RaisedButton(
+      textColor: Colors.white,
+      child: Text('Save'), 
+      onPressed: () {
+        final Map<String, dynamic> product = {
+          'title': _titleValue,
+          'description': _descriptionValue,
+          'price': _priceValue,
+          'image': 'assets/food.jpg'
+        };
+        widget.addProduct(product);
+        Navigator.pushReplacementNamed(context, '/products');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
@@ -66,21 +83,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
         _buildDescriptionTextField(),
         _buildPriceTextField(),
         SizedBox(height: 10.0,),
-        RaisedButton(
-          color: Theme.of(context).primaryColor,
-          textColor: Colors.white,
-          child: Text('Save'), 
-          onPressed: () {
-            final Map<String, dynamic> product = {
-              'title': _titleValue,
-              'description': _descriptionValue,
-              'price': _priceValue,
-              'image': 'assets/food.jpg'
-            };
-            widget.addProduct(product);
-            Navigator.pushReplacementNamed(context, '/products');
-          },
-        ),
+        _buildSaveButton()
       ],
       )
     );

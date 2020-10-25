@@ -37,8 +37,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        // brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.deepOrange,
+        buttonColor: Colors.deepPurple,
+        // buttonTheme: ButtonThemeData(textTheme: TextTheme())
         // fontFamily: 'Oswald'
       ),
       routes: {
