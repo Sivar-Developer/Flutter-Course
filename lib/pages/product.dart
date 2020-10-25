@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/widgets/products/address_tag.dart';
+import 'package:flutter_course/widgets/products/price_tag.dart';
+import 'package:flutter_course/widgets/ui_elements/title_default.dart';
 
 class ProductPage extends StatelessWidget {
   final String title;
+  final double price;
   final String imageUrl;
 
-  ProductPage(this.title, this.imageUrl);
+  ProductPage(this.title, this.price, this.imageUrl);
 
   _showWarningDialog(BuildContext context) {
     showDialog(
@@ -33,6 +37,19 @@ class ProductPage extends StatelessWidget {
     );
   }
 
+  Widget _buildTitlePriceRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+      Expanded(
+        child: TitleDefault(title)
+      ),
+      SizedBox(width: 8.0,),
+      PriceTag(price.toString()),
+      ]
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(onWillPop: () {
@@ -48,10 +65,8 @@ class ProductPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
         Image.asset(imageUrl),
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Text(title)
-        ),
+        _buildTitlePriceRow(),
+        AddressTag('Union Square, San Fransico'),
         Container(
           padding: EdgeInsets.all(10.0),
           child: RaisedButton(
@@ -60,7 +75,9 @@ class ProductPage extends StatelessWidget {
             child: Text('Delete'),
             onPressed: () => _showWarningDialog(context)
           )
-      )],),
+        )
+      ],
+      ),
       )
     );
   }

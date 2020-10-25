@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:flutter_course/pages/auth.dart';
 
 import './pages/products_admin.dart';
@@ -6,6 +7,7 @@ import './pages/products.dart';
 import './pages/product.dart';
 
 void main() {
+  // debugPaintSizeEnabled = true;
   runApp(MyApp());
 } 
 
@@ -35,8 +37,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        // brightness: Brightness.dark,
         primarySwatch: Colors.deepPurple,
-        accentColor: Colors.deepOrange
+        accentColor: Colors.deepOrange,
+        buttonColor: Colors.deepPurple,
+        // buttonTheme: ButtonThemeData(textTheme: TextTheme())
+        // fontFamily: 'Oswald'
       ),
       routes: {
         '/': (BuildContext context) => AuthPage(),
@@ -51,7 +57,7 @@ class _MyAppState extends State<MyApp> {
         if (pathElement[1] == 'product') {
           final int index = int.parse(pathElement[2]);
           return MaterialPageRoute<bool>(
-                      builder: (BuildContext context) => ProductPage(_products[index]['title'], _products[index]['image'])
+                      builder: (BuildContext context) => ProductPage(_products[index]['title'], _products[index]['price'], _products[index]['image'])
                     );
         }
         return null;
