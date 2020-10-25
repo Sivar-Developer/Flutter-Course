@@ -37,6 +37,19 @@ class ProductPage extends StatelessWidget {
     );
   }
 
+  Widget _buildTitlePriceRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+      Expanded(
+        child: TitleDefault(title)
+      ),
+      SizedBox(width: 8.0,),
+      PriceTag(price.toString()),
+      ]
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(onWillPop: () {
@@ -52,16 +65,7 @@ class ProductPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
         Image.asset(imageUrl),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          Expanded(
-            child: TitleDefault(title)
-          ),
-          SizedBox(width: 8.0,),
-          PriceTag(price.toString()),
-          ]
-        ),
+        _buildTitlePriceRow(),
         AddressTag('Union Square, San Fransico'),
         Container(
           padding: EdgeInsets.all(10.0),
