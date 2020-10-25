@@ -44,8 +44,16 @@ class Products extends StatelessWidget {
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
-                child: Text('Details'),
+              IconButton(
+                icon: Icon(Icons.info),
+                color: Theme.of(context).primaryColor,
+                iconSize: 30,
+                onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + index.toString())
+              ),
+              IconButton(
+                icon: Icon(Icons.favorite_border),
+                color: Colors.red,
+                iconSize: 30,
                 onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + index.toString())
               )
           ])
