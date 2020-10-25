@@ -36,7 +36,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        accentColor: Colors.deepOrange
+        accentColor: Colors.deepOrange,
+        // fontFamily: 'Oswald'
       ),
       routes: {
         '/': (BuildContext context) => AuthPage(),
