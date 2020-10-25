@@ -12,7 +12,20 @@ class Products extends StatelessWidget {
           Image.asset(products[index]['image']),
           Container(
             padding: EdgeInsets.all(10.0),
-            child: Text(products[index]['title'], style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold, fontFamily: 'Oswald'),),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+              Text(
+                products[index]['title'],
+                style: TextStyle(
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Oswald'
+                ),
+              ),
+              SizedBox(width: 8.0,),
+              Text(products[index]['price'].toString())
+            ],),
           ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
