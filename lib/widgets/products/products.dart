@@ -1,68 +1,15 @@
 import "package:flutter/material.dart";
-import './price_tag.dart';
+import 'package:flutter_course/widgets/products/product_card.dart';
 
 class Products extends StatelessWidget {
   final List<Map<String, dynamic>> products;
 
   Products(this.products);
 
-  Widget _buildProductItem(BuildContext context, int index) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(products[index]['image']),
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              Expanded(
-                child: Text(
-                  products[index]['title'],
-                  style: TextStyle(
-                    fontSize: 26.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Oswald'
-                  ),
-                ),
-              ),
-              SizedBox(width: 8.0,),
-              PriceTag(products[index]['price'].toString())
-            ],),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1.0),
-              borderRadius: BorderRadius.circular(6.0)
-            ),
-            child: Text('Union Square, San Fransico'),
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.info),
-                color: Theme.of(context).primaryColor,
-                iconSize: 30,
-                onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + index.toString())
-              ),
-              IconButton(
-                icon: Icon(Icons.favorite_border),
-                color: Colors.red,
-                iconSize: 30,
-                onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + index.toString())
-              )
-          ])
-        ],
-      ),
-    );
-  }
-
   Widget _buildProductList(BuildContext context) {
     return products.length > 0
         ? ListView.builder(
-            itemBuilder: _buildProductItem,
+            itemBuilder: (BuildContext context, int index) => ProductCard(products[index], index),
             itemCount: products.length,
           )
         : Center(
