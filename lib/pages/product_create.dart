@@ -55,17 +55,19 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
     return RaisedButton(
       textColor: Colors.white,
       child: Text('Save'), 
-      onPressed: () {
-        final Map<String, dynamic> product = {
-          'title': _titleValue,
-          'description': _descriptionValue,
-          'price': _priceValue,
-          'image': 'assets/food.jpg'
-        };
-        widget.addProduct(product);
-        Navigator.pushReplacementNamed(context, '/products');
-      },
+      onPressed: _submitForm,
     );
+  }
+
+  void _submitForm() {
+    final Map<String, dynamic> product = {
+      'title': _titleValue,
+      'description': _descriptionValue,
+      'price': _priceValue,
+      'image': 'assets/food.jpg'
+    };
+    widget.addProduct(product);
+    Navigator.pushReplacementNamed(context, '/products');
   }
 
   @override
@@ -84,6 +86,14 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
         _buildPriceTextField(),
         SizedBox(height: 10.0,),
         _buildSaveButton()
+        // GestureDetector(
+        //   onTap: _submitForm,
+        //   child: Container(
+        //     color: Colors.green,
+        //     padding: EdgeInsets.all(10.0),
+        //     child: Text('My Button'),
+        //   )
+        // )
       ],
       )
     );
