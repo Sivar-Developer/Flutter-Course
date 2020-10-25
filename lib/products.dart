@@ -15,12 +15,14 @@ class Products extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-              Text(
-                products[index]['title'],
-                style: TextStyle(
-                  fontSize: 26.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Oswald'
+              Expanded(
+                child: Text(
+                  products[index]['title'],
+                  style: TextStyle(
+                    fontSize: 26.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Oswald'
+                  ),
                 ),
               ),
               SizedBox(width: 8.0,),
