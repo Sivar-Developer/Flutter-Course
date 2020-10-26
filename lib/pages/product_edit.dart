@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/widgets/helpers/ensure_visible.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
@@ -17,26 +18,34 @@ class ProductEditPage extends StatefulWidget {
 class _ProductEditPageState extends State<ProductEditPage> {
   final Map<String, dynamic> _formData = {'title': null, 'description': null, 'price': null, 'image': 'assets/food.jpg'};
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _titleFocusNode = FocusNode();
+  final _descriptionFocusNode = FocusNode();
+  final _priceFocusNode = FocusNode();
 
   Widget _buildTitleTextField() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'Product Title'),
-      // autovalidate: true,
-      initialValue: widget.product == null ? '' : widget.product['title'].toString(),
-      validator: (String value) {
-        // if(value.trim().length <= 0) {
-          if(value.isEmpty || value.length < 5) {
-          return 'Title is required and should be +5 characters long.';
-        }
-      },
-      onSaved: (String value) {
-        _formData['title'] = value;
-      },
-    );
+    return EnsureVisibleWhenFocused(
+      focusNode: _titleFocusNode,
+      child: TextFormField(
+          decoration: InputDecoration(labelText: 'Product Title'),
+          // autovalidate: true,
+          initialValue: widget.product == null ? '' : widget.product['title'].toString(),
+          validator: (String value) {
+            // if(value.trim().length <= 0) {
+              if(value.isEmpty || value.length < 5) {
+              return 'Title is required and should be +5 characters long.';
+            }
+          },
+          onSaved: (String value) {
+            _formData['title'] = value;
+          },
+        ),
+      );
   }
 
   Widget _buildDescriptionTextField() {
-    return TextFormField(
+    return EnsureVisibleWhenFocused(
+      focusNode: _descriptionFocusNode,
+      child: TextFormField(
       decoration: InputDecoration(labelText: 'Product Description'),
       maxLines: 4,
       initialValue: widget.product == null ? '' : widget.product['description'].toString(),
@@ -48,11 +57,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
       onSaved: (String value) {
         _formData['description'] = value;
       },
+      )
     );
   }
 
   Widget _buildPriceTextField() {
-    return TextFormField(
+    return EnsureVisibleWhenFocused(
+      focusNode: _priceFocusNode,
+      child: TextFormField(
       decoration: InputDecoration(labelText: 'Product Price'),
       keyboardType: TextInputType.number,
       initialValue: widget.product == null ? '' : widget.product['price'].toString(),
@@ -64,6 +76,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       onSaved: (String value) {
         _formData['price'] = double.parse(value);
       },
+      )
     );
   }
 
