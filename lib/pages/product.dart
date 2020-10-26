@@ -7,8 +7,9 @@ class ProductPage extends StatelessWidget {
   final String title;
   final double price;
   final String imageUrl;
+  final String description;
 
-  ProductPage(this.title, this.price, this.imageUrl);
+  ProductPage(this.title, this.price, this.imageUrl, this.description);
 
   _showWarningDialog(BuildContext context) {
     showDialog(

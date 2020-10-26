@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/widgets/helpers/ensure_visible.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
   final Function updateProduct;
-  final Map<String, dynamic> product;
+  final Product product;
   final int productIndex;
 
   ProductEditPage({this.addProduct, this.updateProduct, this.product, this.productIndex});
@@ -28,7 +29,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
           decoration: InputDecoration(labelText: 'Product Title'),
           // autovalidate: true,
-          initialValue: widget.product == null ? '' : widget.product['title'].toString(),
+          initialValue: widget.product == null ? '' : widget.product.title.toString(),
           validator: (String value) {
             // if(value.trim().length <= 0) {
               if(value.isEmpty || value.length < 5) {
@@ -48,7 +49,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
       decoration: InputDecoration(labelText: 'Product Description'),
       maxLines: 4,
-      initialValue: widget.product == null ? '' : widget.product['description'].toString(),
+      initialValue: widget.product == null ? '' : widget.product.description.toString(),
       validator: (String value) {
           if(value.isEmpty || value.length < 5) {
           return 'Description is required and should be +5 characters long.';
@@ -67,7 +68,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       child: TextFormField(
       decoration: InputDecoration(labelText: 'Product Price'),
       keyboardType: TextInputType.number,
-      initialValue: widget.product == null ? '' : widget.product['price'].toString(),
+      initialValue: widget.product == null ? '' : widget.product.price.toString(),
       validator: (String value) {
           if(value.isEmpty || !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
           return 'Price is required and should be a number.';
@@ -129,7 +130,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
       return;
     }
     _formKey.currentState.save();
-    widget.product == null ? widget.addProduct(_formData) : widget.updateProduct(widget.productIndex, _formData);
+    widget.product == null ? widget.addProduct(
+      Product(
+        title: _formData['title'],
+        description: _formData['description'],
+        price: _formData['price'],
+        image: _formData['image']
+      )
+    ) : widget.updateProduct(widget.productIndex, 
+      Product(
+        title: _formData['title'],
+        description: _formData['description'],
+        price: _formData['price'],
+        image: _formData['image']
+      )
+    );
     Navigator.pushReplacementNamed(context, '/products');
   }
 
