@@ -82,7 +82,10 @@ mixin ProductsModel on ConnectedProducts {
     notifyListeners();
   }
 
-  void selectProduct(int index) {
-    selProductIndex = index;
+  void selectProduct(int productId) {
+    selProductIndex = productId;
+    if (productId != null) {
+      notifyListeners();
+    }
   }
 }
