@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/scoped-models/products.dart';
 import 'package:flutter_course/widgets/products/products.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ProductsPage extends StatelessWidget {
 
@@ -25,15 +27,20 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: _buildSideDrawer(context),
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.favorite), onPressed: () {},)
-        ],
-      ),
-      body: Products(),
-    );
+      return Scaffold(
+        drawer: _buildSideDrawer(context),
+        appBar: AppBar(
+          title: Text('Home'),
+          actions: <Widget>[
+            ScopedModelDescendant<ProductsModel>(builder: (BuildContext context, Widget child, ProductsModel model) {
+              return IconButton(
+                icon: Icon(model.displayFavoriteOnly ? Icons.favorite : Icons.favorite_outline), 
+                onPressed: () => model.toggleDisplayMode(),
+              );
+            })
+          ],
+        ),
+        body: Products(),
+      );
   }
 }
