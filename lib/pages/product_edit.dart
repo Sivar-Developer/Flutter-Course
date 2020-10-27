@@ -99,7 +99,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         price: _formData['price'],
         image: _formData['image']
       )
-    ) : updateProduct(selectedProductIndex, 
+    ) : updateProduct(
       Product(
         title: _formData['title'],
         description: _formData['description'],
