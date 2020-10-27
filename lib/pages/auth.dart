@@ -74,6 +74,7 @@ class _AuthPageState extends State<AuthPage> {
       return;
     }
     _formKey.currentState.save();
+    login(_formData['email'], _formData['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
