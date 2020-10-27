@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/widgets/helpers/ensure_visible.dart';
+import 'package:scoped_model/scoped_model.dart';
+import '../scoped-models/products.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
@@ -82,10 +84,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildSaveButton() {
-    return RaisedButton(
-      textColor: Colors.white,
-      child: Text('Save'), 
-      onPressed: _submitForm,
+    return ScopedModelDescendant<ProductsModel>(
+      builder: (BuildContext context, Widget child, ProductsModel model) {
+        return RaisedButton(
+          textColor: Colors.white,
+          child: Text('Save'),
+          onPressed: _submitForm(model.addProduct, model.updateProduct),
+        );
+      }
     );
   }
 
@@ -125,19 +131,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm() {
+  _submitForm(Function addProduct, Function updateProduct) {
     if(!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
-    widget.product == null ? widget.addProduct(
+    widget.product == null ? addProduct(
       Product(
         title: _formData['title'],
         description: _formData['description'],
         price: _formData['price'],
         image: _formData['image']
       )
-    ) : widget.updateProduct(widget.productIndex, 
+    ) : updateProduct(widget.productIndex, 
       Product(
         title: _formData['title'],
         description: _formData['description'],
