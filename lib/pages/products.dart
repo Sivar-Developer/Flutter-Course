@@ -1,38 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/scoped-models/main.dart';
 import 'package:flutter_course/widgets/products/products.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ProductsPage extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
 
-  ProductsPage(this.products);
+  Widget _buildSideDrawer(context) {
+    return Drawer(
+      child: Column(
+        children: <Widget>[
+          AppBar(
+            automaticallyImplyLeading: false,
+            title: Text('Choose'),
+          ),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Manage Products'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/admin');
+            },
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            AppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Choose'),
-            ),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Manage Products'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/admin');
-              },
-            )
+      return Scaffold(
+        drawer: _buildSideDrawer(context),
+        appBar: AppBar(
+          title: Text('Home'),
+          actions: <Widget>[
+            ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
+              return IconButton(
+                icon: Icon(model.displayFavoriteOnly ? Icons.favorite : Icons.favorite_outline), 
+                onPressed: () => model.toggleDisplayMode(),
+              );
+            })
           ],
         ),
-      ),
-      appBar: AppBar(
-        title: Text('Home'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.favorite), onPressed: () {},)
-        ],
-      ),
-      body: Products(products),
-    );
+        body: Products(),
+      );
   }
 }
