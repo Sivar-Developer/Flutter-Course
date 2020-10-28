@@ -40,7 +40,6 @@ mixin ProductsModel on ConnectedProducts {
       userId: authenticatedUser.id
     );
     products.add(product);
-    selProductIndex = null;
   }
 
   void updateProduct(String title, String description, String image, double price) {
@@ -57,7 +56,6 @@ mixin ProductsModel on ConnectedProducts {
 
   void deleteProduct() {
     products.removeAt(selectedProductIndex);
-    selProductIndex = null;
   }
 
   void toggleProductFavoriteStatus() {
@@ -73,7 +71,6 @@ mixin ProductsModel on ConnectedProducts {
       userId: authenticatedUser.id
     );
     products[selectedProductIndex] = updatedProduct;
-    selProductIndex = null;
     notifyListeners();
   }
 
