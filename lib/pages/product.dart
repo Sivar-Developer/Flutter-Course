@@ -41,7 +41,7 @@ class ProductPage extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-          Image.asset(product.image),
+          Image.network(product.image),
           _buildTitlePriceRow(product.price, product.title),
           AddressTag('Union Square, San Fransico'),
           Container(
