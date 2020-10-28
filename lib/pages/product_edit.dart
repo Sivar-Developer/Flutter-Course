@@ -78,7 +78,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildSaveButton() {
     return ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
-        return RaisedButton(
+        return model.isLoading
+         ? Center(child: CircularProgressIndicator())
+         : RaisedButton(
           textColor: Colors.white,
           child: Text('Save'),
           onPressed: () => _submitForm(model.addProduct, model.updateProduct, model.selectProduct, model.selectedProductIndex),
@@ -97,13 +99,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
       _formData['description'],
       _formData['image'],
       _formData['price'],
-    ) : updateProduct(
+    ).then((_) => Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null))) : updateProduct(
       _formData['title'],
       _formData['description'],
       _formData['image'],
       _formData['price'],
     );
-    Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null));
   }
 
   Widget _buildPageContent(BuildContext context, MainModel model) {
