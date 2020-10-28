@@ -39,16 +39,21 @@ mixin ProductsModel on ConnectedProducts {
       'image': 'http://lorempixel.com/800/800/food',
       'price': price
     };
-    http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData));
-    final Product product = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: authenticatedUser.email,
-      userId: authenticatedUser.id
-    );
-    products.add(product);
+    http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData))
+    .then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Product product = Product(
+        id: responseData['name'],
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: authenticatedUser.email,
+        userId: authenticatedUser.id
+      );
+      products.add(product);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String title, String description, String image, double price) {
