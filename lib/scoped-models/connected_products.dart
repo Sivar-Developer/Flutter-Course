@@ -2,8 +2,15 @@ import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/models/user.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-mixin ConnectedProducts on Model {
+mixin ConnectedProductsModel on Model {
   List<Product> products = [];
   User authenticatedUser;
   int selProductIndex;
+  bool isLoading  = false;
+}
+
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isloading {
+    return isLoading;
+  }
 }

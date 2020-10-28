@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 import './../models/product.dart';
 
-mixin ProductsModel on ConnectedProducts {
+mixin ProductsModel on ConnectedProductsModel {
   
   bool _showFavorites = false;
 
@@ -33,6 +33,7 @@ mixin ProductsModel on ConnectedProducts {
   }
 
   void addProduct(String title, String description, String image, double price) {
+    isLoading = true;
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -54,6 +55,7 @@ mixin ProductsModel on ConnectedProducts {
         userId: authenticatedUser.id
       );
       products.add(product);
+      isLoading = false;
       notifyListeners();
     });
   }
@@ -75,6 +77,7 @@ mixin ProductsModel on ConnectedProducts {
   }
 
   void fetchProducts() {
+    isLoading  = true;
     http.get('https://flutter-products-7ddd6.firebaseio.com/products.json')
     .then((http.Response response) {
       final List<Product> fetchedProductList = [];
@@ -92,6 +95,7 @@ mixin ProductsModel on ConnectedProducts {
         fetchedProductList.add(product);
       });
       products = fetchedProductList;
+      isLoading = false;
       notifyListeners();
     });
   }
