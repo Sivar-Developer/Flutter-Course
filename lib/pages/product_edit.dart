@@ -94,17 +94,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
       return;
     }
     _formKey.currentState.save();
-    selectedProductIndex == null ? addProduct(
+    selectedProductIndex == null
+    ? addProduct(
       _formData['title'],
       _formData['description'],
       _formData['image'],
       _formData['price'],
-    ).then((_) => Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null))) : updateProduct(
+    ).then((_) => Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null)))
+    : updateProduct(
       _formData['title'],
       _formData['description'],
       _formData['image'],
       _formData['price'],
-    );
+    ).then((_) => Navigator.pushReplacementNamed(context, '/products').then((_) => setSelectedProduct(null)));
   }
 
   Widget _buildPageContent(BuildContext context, MainModel model) {

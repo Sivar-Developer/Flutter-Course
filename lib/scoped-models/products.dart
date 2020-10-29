@@ -61,16 +61,32 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void updateProduct(String title, String description, String image, double price) {
-    products[selectedProductIndex] = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: authenticatedUser.email,
-      userId: authenticatedUser.id
-    );
-    selProductIndex = null;
+  Future<Null> updateProduct(String title, String description, String image, double price) {
+    isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> updatedData = {
+      'title': title,
+      'description': description,
+      'image': 'https://placekitten.com/1000/1000',
+      'price': price,
+      'userEmail': authenticatedUser.email,
+      'userId': authenticatedUser.id
+    };
+    return http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json', body: json.encode(updatedData))
+      .then((http.Response response) {
+        isLoading = false;
+        final Product updatedProduct = Product(
+          id: selectedProduct.id,
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: authenticatedUser.email,
+          userId: authenticatedUser.id
+        );
+        products[selectedProductIndex] = updatedProduct;
+        notifyListeners();
+      });
   }
 
   void deleteProduct() {
@@ -111,6 +127,7 @@ mixin ProductsModel on ConnectedProductsModel {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
+      id: selectedProduct.id,
       title: selectedProduct.title,
       description: selectedProduct.description,
       price: selectedProduct.price,
