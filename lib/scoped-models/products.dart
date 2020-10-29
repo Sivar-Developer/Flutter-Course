@@ -38,7 +38,7 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(String title, String description, String image, double price) {
+  Future<bool> addProduct(String title, String description, String image, double price) async {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -49,8 +49,8 @@ mixin ProductsModel on ConnectedProductsModel {
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id,
     };
-    return http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData))
-    .then((http.Response response) {
+    try {
+      final http.Response response = await http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData));
       if(response.statusCode != 200 && response.statusCode != 201) {
         isLoading = false;
         notifyListeners();
@@ -71,12 +71,11 @@ mixin ProductsModel on ConnectedProductsModel {
       isLoading = false;
       notifyListeners();
       return true;
-    })
-    .catchError((error) {
+    } catch (error) {
       isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 
   Future<bool> updateProduct(String title, String description, String image, double price) {
