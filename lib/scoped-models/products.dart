@@ -71,10 +71,15 @@ mixin ProductsModel on ConnectedProductsModel {
       isLoading = false;
       notifyListeners();
       return true;
+    })
+    .catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
-  Future<Null> updateProduct(String title, String description, String image, double price) {
+  Future<bool> updateProduct(String title, String description, String image, double price) {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updatedData = {
@@ -99,10 +104,16 @@ mixin ProductsModel on ConnectedProductsModel {
         );
         products[selectedProductIndex] = updatedProduct;
         notifyListeners();
-      });
+        return true;
+      })
+      .catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
+    });
   }
 
-  Future<Null> deleteProduct() {
+  Future<bool> deleteProduct() {
     isLoading = true;
     final deletedProductId = selectedProduct.id;
     final int selectedProductIndex = products.indexWhere((Product product) => product.id == selProductId);
@@ -113,6 +124,12 @@ mixin ProductsModel on ConnectedProductsModel {
     .then((http.Response response) {
       isLoading = false;
       notifyListeners();
+      return true;
+    })
+    .catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
@@ -120,7 +137,7 @@ mixin ProductsModel on ConnectedProductsModel {
     isLoading  = true;
     notifyListeners();
     return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json')
-    .then((http.Response response) {
+    .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       if(productListData == null) {
