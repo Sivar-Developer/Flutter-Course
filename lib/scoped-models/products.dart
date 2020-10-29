@@ -136,6 +136,7 @@ mixin ProductsModel on ConnectedProductsModel {
       products = fetchedProductList;
       isLoading = false;
       notifyListeners();
+      selProductId = null;
     });
   }
 
