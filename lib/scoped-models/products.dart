@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_course/scoped-models/connected_products.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:http/http.dart' as http;
 
 import './../models/product.dart';
 
-mixin ProductsModel on ConnectedProducts {
+mixin ProductsModel on ConnectedProductsModel {
   
   bool _showFavorites = false;
 
@@ -19,49 +21,153 @@ mixin ProductsModel on ConnectedProducts {
   }
 
   int get selectedProductIndex {
-    return selProductIndex;
+   return products.indexWhere((Product product) => product.id == selProductId);
+  }
+
+  String get selectedProductId {
+    return selProductId;
   }
 
   Product get selectedProduct {
-    return selectedProductIndex != null ? products[selectedProductIndex] : null;
+    return selectedProductId != null ? products.firstWhere((Product product) {
+      return product.id == selProductId;
+    }) : null;
   }
 
   bool get displayFavoriteOnly {
     return _showFavorites;
   }
 
-  void addProduct(String title, String description, String image, double price) {
-    final Product product = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: authenticatedUser.email,
-      userId: authenticatedUser.id
-    );
-    products.add(product);
+  Future<bool> addProduct(String title, String description, String image, double price) async {
+    isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image': 'https://placekitten.com/1000/1000',
+      'price': price,
+      'userEmail': authenticatedUser.email,
+      'userId': authenticatedUser.id,
+    };
+    try {
+      final http.Response response = await http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData));
+      if(response.statusCode != 200 && response.statusCode != 201) {
+        isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Product product = Product(
+        id: responseData['name'],
+        title: title,
+        description: description,
+        image: image,
+        price: price,
+        userEmail: authenticatedUser.email,
+        userId: authenticatedUser.id
+      );
+      products.add(product);
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
-  void updateProduct(String title, String description, String image, double price) {
-    products[selectedProductIndex] = Product(
-      title: title,
-      description: description,
-      image: image,
-      price: price,
-      userEmail: authenticatedUser.email,
-      userId: authenticatedUser.id
-    );
-    selProductIndex = null;
+  Future<bool> updateProduct(String title, String description, String image, double price) {
+    isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> updatedData = {
+      'title': title,
+      'description': description,
+      'image': 'https://placekitten.com/1000/1000',
+      'price': price,
+      'userEmail': authenticatedUser.email,
+      'userId': authenticatedUser.id
+    };
+    return http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json', body: json.encode(updatedData))
+      .then((http.Response response) {
+        isLoading = false;
+        final Product updatedProduct = Product(
+          id: selectedProduct.id,
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: authenticatedUser.email,
+          userId: authenticatedUser.id
+        );
+        products[selectedProductIndex] = updatedProduct;
+        notifyListeners();
+        return true;
+      })
+      .catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
+    });
   }
 
-  void deleteProduct() {
+  Future<bool> deleteProduct() {
+    isLoading = true;
+    final deletedProductId = selectedProduct.id;
+    final int selectedProductIndex = products.indexWhere((Product product) => product.id == selProductId);
     products.removeAt(selectedProductIndex);
+    selProductId = null;
+    notifyListeners();
+    return http.delete('https://flutter-products-7ddd6.firebaseio.com/products/$deletedProductId.json')
+    .then((http.Response response) {
+      isLoading = false;
+      notifyListeners();
+      return true;
+    })
+    .catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      return false;
+    });
+  }
+
+  Future<Null> fetchProducts() {
+    isLoading  = true;
+    notifyListeners();
+    return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json')
+    .then<Null>((http.Response response) {
+      final List<Product> fetchedProductList = [];
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      if(productListData == null) {
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+      productListData.forEach((String productId, dynamic productData) { 
+        final Product product = Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          image: productData['image'],
+          price: productData['price'],
+          userEmail: productData['userEmail'],
+          userId: productData['userId']
+        );
+        fetchedProductList.add(product);
+      });
+      products = fetchedProductList;
+      isLoading = false;
+      notifyListeners();
+      selProductId = null;
+    });
   }
 
   void toggleProductFavoriteStatus() {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
+      id: selectedProduct.id,
       title: selectedProduct.title,
       description: selectedProduct.description,
       price: selectedProduct.price,
@@ -79,8 +185,8 @@ mixin ProductsModel on ConnectedProducts {
     notifyListeners();
   }
 
-  void selectProduct(int productId) {
-    selProductIndex = productId;
+  void selectProduct(String productId) {
+    selProductId = productId;
     if (productId != null) {
       notifyListeners();
     }

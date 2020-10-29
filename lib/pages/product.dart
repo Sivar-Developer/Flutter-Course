@@ -8,9 +8,9 @@ import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 
 class ProductPage extends StatelessWidget {
-  final int productIndex;
+  final Product product;
 
-  ProductPage(this.productIndex);
+  ProductPage(this.product);
 
   Widget _buildTitlePriceRow(double price, String title) {
     return Row(
@@ -31,9 +31,7 @@ class ProductPage extends StatelessWidget {
       print('Back button pressed!');
       Navigator.pop(context, false);
       return Future.value(true);
-    }, child: ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
-      final Product product = model.allProducts[productIndex];
-      return Scaffold(
+    }, child: Scaffold(
         appBar: AppBar(
           title: Text(product.title),
         ),
@@ -41,7 +39,10 @@ class ProductPage extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-          Image.asset(product.image),
+          FadeInImage(
+            image: NetworkImage(product.image),
+            placeholder: AssetImage('assets/placeholder.png'),
+          ),
           _buildTitlePriceRow(product.price, product.title),
           AddressTag('Union Square, San Fransico'),
           Container(
@@ -53,8 +54,7 @@ class ProductPage extends StatelessWidget {
           )
         ],
         ),
-        );
-      }) 
+      )
     );
   }
 }
