@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+enum AuthMode {
+   Signup,
+   Login
+}
+
 class AuthPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -16,6 +21,8 @@ class _AuthPageState extends State<AuthPage> {
     'acceptTerms': false
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _passwordTextController = TextEditingController();
+  AuthMode _authMode = AuthMode.Login;
 
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
@@ -46,7 +53,26 @@ class _AuthPageState extends State<AuthPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Password', filled: true, fillColor: Colors.white),
       obscureText: true,
+      controller: _passwordTextController,
       validator: (String value) {
+        if (value.isEmpty || value.length < 6) {
+          return 'Password invalid';
+        }
+      },
+      onSaved: (String value) {
+        _formData['password'] = value;
+      },
+    );
+  }
+
+  Widget _buildPasswordConfirmTextField() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Confirmed Password', filled: true, fillColor: Colors.white),
+      obscureText: true,
+      validator: (String value) {
+        if (_passwordTextController.text != value) {
+          return 'Passwords do not match';
+        }
         if (value.isEmpty || value.length < 6) {
           return 'Password invalid';
         }
@@ -84,7 +110,7 @@ class _AuthPageState extends State<AuthPage> {
     final double targetWidth = deviceWidth > 768.0 ? 500.0 : deviceWidth * 0.95;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(_authMode == AuthMode.Login ? 'Login' : 'Signup'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -102,10 +128,19 @@ class _AuthPageState extends State<AuthPage> {
                     _buildEmailTextField(),
                     SizedBox(height: 10.0),
                     _buildPasswordTextField(),
+                    SizedBox(height: 10.0),
+                    (_authMode == AuthMode.Signup) ? _buildPasswordConfirmTextField() : Container(),
                     _buildAcceptSwitch(),
-                    SizedBox(
-                      height: 10.0
+                    SizedBox(height: 10.0),
+                    FlatButton(
+                      child: Text('Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
+                      onPressed: () {
+                        setState(() {
+                          _authMode = (_authMode == AuthMode.Login) ? AuthMode.Signup : AuthMode.Login;
+                        });
+                      },
                     ),
+                    SizedBox(height: 10.0),
                     ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
                       return RaisedButton(
                         textColor: Colors.white,
