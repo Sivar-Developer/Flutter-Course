@@ -28,28 +28,29 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) { 
-    return ButtonBar(
-      alignment: MainAxisAlignment.center,
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.info),
-          color: Theme.of(context).primaryColor,
-          iconSize: 30,
-          onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + productIndex.toString())
-        ),
-        ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model) {
-          return IconButton(
-            icon: Icon(model.allProducts[productIndex].isFavorite ? Icons.favorite : Icons.favorite_border),
-            color: Colors.red,
+  Widget _buildActionButtons(BuildContext context) {
+    return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model) {
+      return ButtonBar(
+        alignment: MainAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.info),
+            color: Theme.of(context).primaryColor,
             iconSize: 30,
-            onPressed: () {
-              model.selectProduct(productIndex);
-              model.toggleProductFavoriteStatus();
-            }
-          );
-        })
-    ]);
+            onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + model.allProducts[productIndex].id).then((_) => model.selectProduct(null))
+          ),
+          IconButton(
+              icon: Icon(model.allProducts[productIndex].isFavorite ? Icons.favorite : Icons.favorite_border),
+              color: Colors.red,
+              iconSize: 30,
+              onPressed: () {
+                model.selectProduct(model.allProducts[productIndex].id);
+                model.toggleProductFavoriteStatus();
+              }
+            )
+          ]
+      );
+    });
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 mixin ConnectedProductsModel on Model {
   List<Product> products = [];
   User authenticatedUser;
-  int selProductIndex;
+  String selProductId;
   bool isLoading  = false;
 }
 

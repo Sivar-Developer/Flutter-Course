@@ -21,11 +21,17 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   int get selectedProductIndex {
-    return selProductIndex;
+   return products.indexWhere((Product product) => product.id == selProductId);
+  }
+
+  String get selectedProductId {
+    return selProductId;
   }
 
   Product get selectedProduct {
-    return selectedProductIndex != null ? products[selectedProductIndex] : null;
+    return selectedProductId != null ? products.firstWhere((Product product) {
+      return product.id == selProductId;
+    }) : null;
   }
 
   bool get displayFavoriteOnly {
@@ -92,8 +98,9 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> deleteProduct() {
     isLoading = true;
     final deletedProductId = selectedProduct.id;
+    final int selectedProductIndex = products.indexWhere((Product product) => product.id == selProductId);
     products.removeAt(selectedProductIndex);
-    selProductIndex = null;
+    selProductId = null;
     notifyListeners();
     return http.delete('https://flutter-products-7ddd6.firebaseio.com/products/$deletedProductId.json')
     .then((http.Response response) {
@@ -154,8 +161,8 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
   }
 
-  void selectProduct(int productId) {
-    selProductIndex = productId;
+  void selectProduct(String productId) {
+    selProductId = productId;
     if (productId != null) {
       notifyListeners();
     }
