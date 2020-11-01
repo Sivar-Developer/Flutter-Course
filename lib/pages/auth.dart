@@ -23,14 +23,14 @@ class _AuthPageState extends State<AuthPage> {
   DecorationImage _buildBackgroundImage() {
     return DecorationImage(
       fit: BoxFit.cover,
-      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.dstATop),
-      image: AssetImage('assets/background.jpg')
+      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop),
+      image: AssetImage('assets/background_2.jpg')
     );
   }
 
   Widget _buildEmailTextField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Email', filled: true, fillColor: Colors.white),
+      decoration: InputDecoration(labelText: 'Email', filled: true, fillColor: Colors.white.withOpacity(0.8)),
       keyboardType: TextInputType.emailAddress,
       validator: (String value) {
         if (value.isEmpty ||
@@ -47,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildPasswordTextField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Password', filled: true, fillColor: Colors.white),
+      decoration: InputDecoration(labelText: 'Password', filled: true, fillColor: Colors.white.withOpacity(0.8)),
       obscureText: true,
       controller: _passwordTextController,
       validator: (String value) {
@@ -63,7 +63,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildPasswordConfirmTextField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Confirmed Password', filled: true, fillColor: Colors.white),
+      decoration: InputDecoration(labelText: 'Confirmed Password', filled: true, fillColor: Colors.white.withOpacity(0.8)),
       obscureText: true,
       validator: (String value) {
         if (_passwordTextController.text != value) {
