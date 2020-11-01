@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_course/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_course/scoped-models/connected_products.dart';
 import 'package:flutter_course/models/auth.dart';
@@ -29,6 +30,8 @@ mixin UserModel on ConnectedProductsModel {
         email: email,
         token: responseData['idToken']
       );
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', responseData['idToken']);
     } else if(responseData['error']['message'] == 'EMAIL_EXISTS') {
       message = 'This email is already exists';
     } else if(responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
@@ -39,5 +42,10 @@ mixin UserModel on ConnectedProductsModel {
     isLoading = false;
     notifyListeners();
     return {'success': !hasError, 'message': message};
+  }
+
+  void autoAuthenticate() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token');
   }
 }
