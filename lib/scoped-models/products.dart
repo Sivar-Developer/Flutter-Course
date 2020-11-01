@@ -50,7 +50,7 @@ mixin ProductsModel on ConnectedProductsModel {
       'userId': authenticatedUser.id,
     };
     try {
-      final http.Response response = await http.post('https://flutter-products-7ddd6.firebaseio.com/products.json', body: json.encode(productData));
+      final http.Response response = await http.post('https://flutter-products-7ddd6.firebaseio.com/products.json?auth=${authenticatedUser.token}', body: json.encode(productData));
       if(response.statusCode != 200 && response.statusCode != 201) {
         isLoading = false;
         notifyListeners();
@@ -89,7 +89,7 @@ mixin ProductsModel on ConnectedProductsModel {
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id
     };
-    return http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json', body: json.encode(updatedData))
+    return http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData))
       .then((http.Response response) {
         isLoading = false;
         final Product updatedProduct = Product(
@@ -119,7 +119,7 @@ mixin ProductsModel on ConnectedProductsModel {
     products.removeAt(selectedProductIndex);
     selProductId = null;
     notifyListeners();
-    return http.delete('https://flutter-products-7ddd6.firebaseio.com/products/$deletedProductId.json')
+    return http.delete('https://flutter-products-7ddd6.firebaseio.com/products/$deletedProductId.json?auth=${authenticatedUser.token}')
     .then((http.Response response) {
       isLoading = false;
       notifyListeners();
@@ -135,7 +135,7 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> fetchProducts() {
     isLoading  = true;
     notifyListeners();
-    return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json')
+    return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json?auth=${authenticatedUser.token}')
     .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);

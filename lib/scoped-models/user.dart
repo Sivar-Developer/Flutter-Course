@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_course/models/user.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_course/scoped-models/connected_products.dart';
@@ -23,6 +24,11 @@ mixin UserModel on ConnectedProductsModel {
     if(responseData.containsKey('idToken')) {
       hasError = false;
       message = 'Authentication Succeeded!';
+      authenticatedUser = User(
+        id: responseData['localId'],
+        email: email,
+        token: responseData['idToken']
+      );
     } else if(responseData['error']['message'] == 'EMAIL_EXISTS') {
       message = 'This email is already exists';
     } else if(responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
