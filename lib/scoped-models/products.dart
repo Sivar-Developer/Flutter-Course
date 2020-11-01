@@ -132,7 +132,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts() {
+  Future<Null> fetchProducts({onlyForUser = false}) {
     isLoading  = true;
     notifyListeners();
     return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json?auth=${authenticatedUser.token}')
@@ -157,7 +157,9 @@ mixin ProductsModel on ConnectedProductsModel {
         );
         fetchedProductList.add(product);
       });
-      products = fetchedProductList;
+      products = onlyForUser ? fetchedProductList.where((Product product) {
+        return product.userId == authenticatedUser.id;
+      }).toList() : fetchedProductList;
       isLoading = false;
       notifyListeners();
       selProductId = null;
