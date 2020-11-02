@@ -6,7 +6,7 @@ import '../helpers/ensure_visible.dart';
 class LocationInput extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    throw _LocationInputState();
+    return _LocationInputState();
   }
 }
 
@@ -25,6 +25,10 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
+  // void getStaticMap() async {
+  //   // final StaticMapProvider staticMapProvider = StaticMapProvider();
+  // }
+
   void _updateLocation() {
     //
   }
@@ -34,10 +38,24 @@ class _LocationInputState extends State<LocationInput> {
     return Column(
       children: <Widget>[
         EnsureVisibleWhenFocused(
-            focusNode: _addressInputFocusNode, 
-            child: TextFormField(
-              focusNode: _addressInputFocusNode,
-            ))
+          focusNode: _addressInputFocusNode,
+          child: TextFormField(
+            focusNode: _addressInputFocusNode,
+          )
+        ),
+        SizedBox(height: 10.0),
+        Container(
+          height: 300,
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(36.19263133660091, 44.00578426256253),
+              zoom: 15,
+            ),
+            myLocationEnabled: true,
+            mapType: MapType.normal,
+            compassEnabled: true,
+          ),
+        )
       ],
     );
   }
