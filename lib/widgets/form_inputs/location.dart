@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_course/models/location_data.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,36 +15,20 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  LocationData _locationData;
   final FocusNode _addressInputFocusNode = FocusNode();
   final TextEditingController _addressInputController = TextEditingController();
-  dynamic coords = {'lat': 36.19263133660091, 'lng': 44.00578426256253};
   List<Marker> allMarkers = [];
 
   @override
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
-    allMarkers.add(
-      Marker(
-        markerId: MarkerId('myMarker'),
-        draggable: false,
-        onTap: () {print('Marker Tapped');},
-        position: LatLng(coords['lat'], coords['lng'])
-      )
-    );
     super.initState();
   }
 
   @override
   void dispose() {
     _addressInputFocusNode.removeListener(_updateLocation);
-    allMarkers.add(
-      Marker(
-        markerId: MarkerId('myMarker'),
-        draggable: false,
-        onTap: () {print('Marker Tapped');},
-        position: LatLng(coords['lat'], coords['lng'])
-      )
-    );
     super.dispose();
   }
 
@@ -57,21 +42,20 @@ class _LocationInputState extends State<LocationInput> {
     final http.Response response  = await http.get(uri);
     final decodedResponse = json.decode(response.body);
     final formattedAddress = decodedResponse['results'][0]['formatted_address'];
+    final coords = decodedResponse['results'][0]['geometry']['location'];
+    _locationData = LocationData(address: formattedAddress, latitude: coords['lat'], longitude: coords['lng']);
+
     setState(() {
-      coords = decodedResponse['results'][0]['geometry']['location'];
-    });
-    print(coords);
-    setState(() {
+      _addressInputController.text = formattedAddress;
       allMarkers.add(
       Marker(
         markerId: MarkerId('myMarker'),
         draggable: false,
         onTap: () {print('Marker Tapped');},
-        position: LatLng(coords['lat'], coords['lng'])
+        position: LatLng(_locationData.latitude, _locationData.longitude)
       )
     );
     });
-    return coords;
     }
   }
 
@@ -90,6 +74,11 @@ class _LocationInputState extends State<LocationInput> {
           child: TextFormField(
             focusNode: _addressInputFocusNode,
             controller: _addressInputController,
+            validator: (String value) {
+              if(_locationData == null ||  value.isEmpty) {
+                return 'No valid location found';
+              }
+            },
             decoration: InputDecoration(labelText: 'Address'),
           )
         ),
