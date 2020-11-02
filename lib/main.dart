@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/product.dart';
+import 'package:flutter_course/pages/map.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:flutter_course/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -51,6 +52,7 @@ class _MyAppState extends State<MyApp> {
         ),
         routes: {
           '/': (BuildContext context) => !_isAuthenticated ? AuthPage() : ProductsPage(_model),
+          '/map': (BuildContext context) => !_isAuthenticated ? AuthPage() : MapPage(),
           '/admin': (BuildContext context) => !_isAuthenticated ? AuthPage() : ProductsAdminPage(_model)
         },
         onGenerateRoute: (RouteSettings settings) {

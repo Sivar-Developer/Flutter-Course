@@ -37,6 +37,13 @@ class _ProductsPageState extends State<ProductsPage> {
               Navigator.pushReplacementNamed(context, '/admin');
             },
           ),
+          ListTile(
+            leading: Icon(Icons.map_outlined),
+            title: Text('Map'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/map');
+            },
+          ),
           Divider(),
           LogoutListTile()
         ],
