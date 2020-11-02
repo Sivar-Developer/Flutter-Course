@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 import '../helpers/ensure_visible.dart';
 
@@ -12,6 +13,7 @@ class LocationInput extends StatefulWidget {
 
 class _LocationInputState extends State<LocationInput> {
   final FocusNode _addressInputFocusNode = FocusNode();
+  final TextEditingController _addressInputController = TextEditingController();
 
   @override
   void initState() {
@@ -25,12 +27,20 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
-  // void getStaticMap() async {
-  //   // final StaticMapProvider staticMapProvider = StaticMapProvider();
-  // }
+  Future<dynamic> getStaticMap(String address) async {
+    final Uri uri = Uri.https(
+      'maps.googleapis.com',
+      '/maps/api/geocode/json',
+      {'address': address, 'key': 'AIzaSyB4qGTCPJNlRkroSxsoqYm_xnPUruCdK3E'}
+    );
+    final http.Response response  = await http.get(uri);
+    return;
+  }
 
   void _updateLocation() {
-    //
+    if(!_addressInputFocusNode.hasFocus) {
+      getStaticMap(_addressInputController.text);
+    }
   }
 
   @override
@@ -41,6 +51,8 @@ class _LocationInputState extends State<LocationInput> {
           focusNode: _addressInputFocusNode,
           child: TextFormField(
             focusNode: _addressInputFocusNode,
+            controller: _addressInputController,
+            decoration: InputDecoration(labelText: 'Address'),
           )
         ),
         SizedBox(height: 10.0),
@@ -54,7 +66,7 @@ class _LocationInputState extends State<LocationInput> {
             myLocationEnabled: true,
             mapType: MapType.normal,
             compassEnabled: true,
-          ),
+          )
         )
       ],
     );
