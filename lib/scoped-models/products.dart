@@ -68,6 +68,7 @@ mixin ProductsModel on ConnectedProductsModel {
         description: description,
         image: image,
         price: price,
+        location: locData,
         userEmail: authenticatedUser.email,
         userId: authenticatedUser.id
       );
@@ -156,6 +157,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: productData['description'],
           image: productData['image'],
           price: productData['price'],
+          location: LocationData(address: productData['loc_address'], latitude: productData['loc_lat'], longitude: productData['loc_lng']),
           userEmail: productData['userEmail'],
           userId: productData['userId'],
           isFavorite: productData['whishlistUsers'] == null ? false : (productData['whishlistUsers'] as Map<String, dynamic>).containsKey(authenticatedUser.id)

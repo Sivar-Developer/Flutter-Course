@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/location_data.dart';
+import 'package:flutter_course/models/product.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,8 +10,9 @@ import '../helpers/ensure_visible.dart';
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
+  final Product product;
 
-  LocationInput(this.setLocation);
+  LocationInput(this.setLocation, this.product);
 
   @override
   State<StatefulWidget> createState() {
@@ -27,6 +29,9 @@ class _LocationInputState extends State<LocationInput> {
   @override
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
+    if(widget.product != null) {
+      getStaticMap(widget.product.location.address);
+    }
     super.initState();
   }
 
@@ -38,20 +43,25 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<dynamic> getStaticMap(String address) async {
     if(address.isNotEmpty) {
-    final Uri uri = Uri.https(
-      'maps.googleapis.com',
-      '/maps/api/geocode/json',
-      {'address': address, 'key': 'AIzaSyB4qGTCPJNlRkroSxsoqYm_xnPUruCdK3E'}
-    );
-    final http.Response response  = await http.get(uri);
-    final decodedResponse = json.decode(response.body);
-    final formattedAddress = decodedResponse['results'][0]['formatted_address'];
-    final coords = decodedResponse['results'][0]['geometry']['location'];
-    _locationData = LocationData(address: formattedAddress, latitude: coords['lat'], longitude: coords['lng']);
+      if(widget.product == null) {
+        final Uri uri = Uri.https(
+          'maps.googleapis.com',
+          '/maps/api/geocode/json',
+          {'address': address, 'key': 'AIzaSyB4qGTCPJNlRkroSxsoqYm_xnPUruCdK3E'}
+        );
+        final http.Response response  = await http.get(uri);
+        final decodedResponse = json.decode(response.body);
+        final formattedAddress = decodedResponse['results'][0]['formatted_address'];
+        final coords = decodedResponse['results'][0]['geometry']['location'];
+        _locationData = LocationData(address: formattedAddress, latitude: coords['lat'], longitude: coords['lng']);
+      } else {
+        _locationData = widget.product.location;
+      }
+
     widget.setLocation(_locationData);
 
     setState(() {
-      _addressInputController.text = formattedAddress;
+      _addressInputController.text = _locationData.address;
       allMarkers.add(
       Marker(
         markerId: MarkerId('myMarker'),

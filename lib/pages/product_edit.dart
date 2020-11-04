@@ -165,7 +165,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildTitleTextField(model.selectedProduct),
                     _buildDescriptionTextField(model.selectedProduct),
                     _buildPriceTextField(model.selectedProduct),
-                    LocationInput(_setLocation),
+                    LocationInput(_setLocation, model.selectedProduct),
                     SizedBox(
                       height: 10.0,
                     ),
