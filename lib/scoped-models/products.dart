@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/scoped-models/connected_products.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,14 +39,17 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(String title, String description, String image, double price) async {
+  Future<bool> addProduct(String title, String description, String image, double price, LocationData locData) async {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image': 'https://placekitten.com/1000/1000',
+      'image': image,
       'price': price,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id,
     };
@@ -74,6 +78,7 @@ mixin ProductsModel on ConnectedProductsModel {
     } catch (error) {
       isLoading = false;
       notifyListeners();
+      print(error);
       return false;
     }
   }
@@ -84,7 +89,7 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> updatedData = {
       'title': title,
       'description': description,
-      'image': 'https://placekitten.com/1000/1000',
+      'image': image,
       'price': price,
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id

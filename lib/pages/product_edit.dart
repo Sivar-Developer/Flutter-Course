@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/scoped-models/main.dart';
 import 'package:flutter_course/widgets/form_inputs/location.dart';
@@ -17,7 +18,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'assets/food.jpg'
+    'image': 'https://placekitten.com/1000/1000',
+    'location': null
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _titleFocusNode = FocusNode();
@@ -98,6 +100,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
     });
   }
 
+  void _setLocation(LocationData locData) {
+    _formData['location']  = locData;
+  }
+
   _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
@@ -111,6 +117,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             _formData['description'],
             _formData['image'],
             _formData['price'],
+            _formData['location']
           ).then((bool success) {
             if (success) {
               Navigator.pushReplacementNamed(context, '/products')
@@ -158,7 +165,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildTitleTextField(model.selectedProduct),
                     _buildDescriptionTextField(model.selectedProduct),
                     _buildPriceTextField(model.selectedProduct),
-                    LocationInput(),
+                    LocationInput(_setLocation),
                     SizedBox(
                       height: 10.0,
                     ),

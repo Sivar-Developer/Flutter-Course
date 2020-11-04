@@ -8,6 +8,10 @@ import 'package:http/http.dart' as http;
 import '../helpers/ensure_visible.dart';
 
 class LocationInput extends StatefulWidget {
+  final Function setLocation;
+
+  LocationInput(this.setLocation);
+
   @override
   State<StatefulWidget> createState() {
     return _LocationInputState();
@@ -44,6 +48,7 @@ class _LocationInputState extends State<LocationInput> {
     final formattedAddress = decodedResponse['results'][0]['formatted_address'];
     final coords = decodedResponse['results'][0]['geometry']['location'];
     _locationData = LocationData(address: formattedAddress, latitude: coords['lat'], longitude: coords['lng']);
+    widget.setLocation(_locationData);
 
     setState(() {
       _addressInputController.text = formattedAddress;
