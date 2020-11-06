@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/scoped-models/connected_products.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,14 +39,17 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(String title, String description, String image, double price) async {
+  Future<bool> addProduct(String title, String description, String image, double price, LocationData locData) async {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image': 'https://placekitten.com/1000/1000',
+      'image': image,
       'price': price,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id,
     };
@@ -64,6 +68,7 @@ mixin ProductsModel on ConnectedProductsModel {
         description: description,
         image: image,
         price: price,
+        location: locData,
         userEmail: authenticatedUser.email,
         userId: authenticatedUser.id
       );
@@ -74,18 +79,22 @@ mixin ProductsModel on ConnectedProductsModel {
     } catch (error) {
       isLoading = false;
       notifyListeners();
+      print(error);
       return false;
     }
   }
 
-  Future<bool> updateProduct(String title, String description, String image, double price) {
+  Future<bool> updateProduct(String title, String description, String image, double price, LocationData locData) {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updatedData = {
       'title': title,
       'description': description,
-      'image': 'https://placekitten.com/1000/1000',
+      'image': image,
       'price': price,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id
     };
@@ -98,6 +107,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: description,
           image: image,
           price: price,
+          location: selectedProduct.location,
           userEmail: authenticatedUser.email,
           userId: authenticatedUser.id
         );
@@ -151,6 +161,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: productData['description'],
           image: productData['image'],
           price: productData['price'],
+          location: LocationData(address: productData['loc_address'], latitude: productData['loc_lat'], longitude: productData['loc_lng']),
           userEmail: productData['userEmail'],
           userId: productData['userId'],
           isFavorite: productData['whishlistUsers'] == null ? false : (productData['whishlistUsers'] as Map<String, dynamic>).containsKey(authenticatedUser.id)
@@ -175,6 +186,7 @@ mixin ProductsModel on ConnectedProductsModel {
       description: selectedProduct.description,
       price: selectedProduct.price,
       image: selectedProduct.image,
+      location: selectedProduct.location,
       isFavorite: newFavoriteStatus,
       userEmail: authenticatedUser.email,
       userId: authenticatedUser.id
@@ -194,6 +206,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: selectedProduct.description,
           price: selectedProduct.price,
           image: selectedProduct.image,
+          location: selectedProduct.location,
           isFavorite: !newFavoriteStatus,
           userEmail: authenticatedUser.email,
           userId: authenticatedUser.id

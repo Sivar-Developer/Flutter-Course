@@ -41,5 +41,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>So can I track you while you use the app</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>So can I track you at all times</string>
 </dict>
 </plist>
