@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/scoped-models/main.dart';
+import 'package:flutter_course/widgets/form_inputs/image.dart';
 import 'package:flutter_course/widgets/form_inputs/location.dart';
 import 'package:flutter_course/widgets/helpers/ensure_visible.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -175,9 +176,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildDescriptionTextField(model.selectedProduct),
                     _buildPriceTextField(model.selectedProduct),
                     LocationInput(_setLocation, model.selectedProduct),
-                    SizedBox(
-                      height: 10.0,
-                    ),
+                    SizedBox(height: 10.0),
+                    ImageInput(),
+                    SizedBox(height: 10.0),
                     _buildSaveButton()
                   ],
                 ))));
