@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/product.dart';
-import 'package:flutter_course/scoped-models/main.dart';
 import 'package:flutter_course/widgets/products/address_tag.dart';
 import 'package:flutter_course/widgets/products/price_tag.dart';
 import 'package:flutter_course/widgets/ui_elements/title_default.dart';
-import 'package:scoped_model/scoped_model.dart';
 import '../models/product.dart';
 
 class ProductPage extends StatelessWidget {
@@ -13,15 +11,18 @@ class ProductPage extends StatelessWidget {
   ProductPage(this.product);
 
   Widget _buildTitlePriceRow(double price, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-      Expanded(
-        child: TitleDefault(title)
-      ),
-      SizedBox(width: 8.0,),
-      PriceTag(price.toString()),
-      ]
+    return Container(
+      margin: EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+        Expanded(
+          child: TitleDefault(title)
+        ),
+        SizedBox(width: 8.0,),
+        PriceTag(price.toString()),
+        ]
+      )
     );
   }
 
@@ -44,7 +45,7 @@ class ProductPage extends StatelessWidget {
             placeholder: AssetImage('assets/placeholder.png'),
           ),
           _buildTitlePriceRow(product.price, product.title),
-          AddressTag('Union Square, San Fransico'),
+          AddressTag(product.location.address),
           Container(
             padding: EdgeInsets.all(10.0),
             child: Text(
