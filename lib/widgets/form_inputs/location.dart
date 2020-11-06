@@ -61,19 +61,21 @@ class _LocationInputState extends State<LocationInput> {
         _locationData = LocationData(address: address, latitude: lat, longitude: lng);
       }
 
-    widget.setLocation(_locationData);
+      widget.setLocation(_locationData);
 
-    setState(() {
-      _addressInputController.text = _locationData.address;
-      allMarkers.add(
-      Marker(
-        markerId: MarkerId('myMarker'),
-        draggable: false,
-        onTap: () {print('Marker Tapped');},
-        position: LatLng(_locationData.latitude, _locationData.longitude)
-      )
-    );
-    });
+      if(mounted) {
+        setState(() {
+          _addressInputController.text = _locationData.address;
+          allMarkers.add(
+          Marker(
+            markerId: MarkerId('myMarker'),
+            draggable: false,
+            onTap: () {print('Marker Tapped');},
+            position: LatLng(_locationData.latitude, _locationData.longitude)
+          )
+        );
+        });
+      }
     }
   }
 
