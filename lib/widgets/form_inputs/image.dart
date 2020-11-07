@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -10,10 +12,13 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
+  File image;
 
   void _pickImage(ImageSource source) async {
-    PickedFile image = await ImagePicker().getImage(source: source, maxWidth: 400.0);
-    print(image);
+    PickedFile _imageFile = await ImagePicker().getImage(source: source, maxWidth: 400.0);
+    setState(() {
+      image = File(_imageFile.path);
+    });
     Navigator.pop(context);
   }
 
@@ -64,10 +69,20 @@ class _ImageInputState extends State<ImageInput> {
               Text('Add Image', 
                 style: TextStyle(
                   color: Theme.of(context).primaryColor),
-                )
+              ),
             ]
           ),
-        )
+        ),
+        SizedBox(height: 10.0),
+        image == null
+        ? Text('Please pick an image.')
+        : Image.file(
+            image,
+            fit: BoxFit.cover,
+            height: 300.0,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.topCenter,
+          )
       ],
     );
   }
