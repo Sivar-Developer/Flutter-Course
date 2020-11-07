@@ -50,15 +50,41 @@ mixin ProductsModel on ConnectedProductsModel {
     if(imagePath != null) {
       imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
     }
+    imageUploadRequest.headers['Authorization'] = 'Bearer ${authenticatedUser.token}';
+
+    try {
+      final streamedResponse = await imageUploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      if(response.statusCode != 200 && response.statusCode != 201) {
+        print('Something went wrong');
+        print(json.decode(response.body));
+        return null;
+      }
+      final responseData = json.decode(response.body);
+      return responseData;
+    } catch(error) {
+      print(error);
+      return null;
+    }
   }
 
   Future<bool> addProduct(String title, String description, File image, double price, LocationData locData) async {
     isLoading = true;
     notifyListeners();
+
+    final uploadData = await uploadImage(image);
+
+    if(uploadData == null) {
+      print('Upload failed');
+      return false;
+    }
+
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
       'image': image,
+      'imagePath': uploadData['imagePath'],
+      'imageUrl': uploadData['imageUrl'],
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
@@ -79,7 +105,7 @@ mixin ProductsModel on ConnectedProductsModel {
         id: responseData['name'],
         title: title,
         description: description,
-        image: image,
+        image: uploadData['imageUrl'],
         price: price,
         location: locData,
         userEmail: authenticatedUser.email,
