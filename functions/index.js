@@ -1,5 +1,9 @@
 const functions = require('firebase-functions');
 const cors = require('cors')({origin: true});
+const Busboy = require('busboy');
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -22,6 +26,21 @@ exports.storeImage = functions.https.onRequest((request, response) => {
         let idToken;
         idToken = req.headers.authorization.split('Bearer ')[1];
 
-        
+        const busboy = new Busboy({headers: req.headers});
+        let uploadData;
+
+        busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+            const filepath = path.join(os.tmpdir(), filename);
+            uploadData = {filepath: filepath, type: mimetype, name: filename};
+            file.pipe(fs.createWriteStream(filepath));
+        });
+
+        busboy.on('field', (fieldname, value) => {
+            oldImagePath = decodeURIComponent(value);
+        });
+
+        busboy.on('finish', () => {
+            //
+        });
     });
 });
