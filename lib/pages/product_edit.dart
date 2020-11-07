@@ -27,6 +27,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
   final _titleTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
 
   Widget _buildTitleTextField(Product product) {
     if(product == null && _titleTextController.text.trim() == '') {
@@ -56,12 +57,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildDescriptionTextField(Product product) {
+     if(product == null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = '';
+    } else if (product != null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = product.title;
+    }
     return EnsureVisibleWhenFocused(
         focusNode: _descriptionFocusNode,
         child: TextFormField(
           decoration: InputDecoration(labelText: 'Product Description'),
           maxLines: 4,
-          initialValue: product == null ? '' : product.description.toString(),
+          controller: _descriptionTextController,
           validator: (String value) {
             if (value.isEmpty || value.length < 5) {
               return 'Description is required and should be +5 characters long.';
@@ -123,7 +129,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     selectedProductIndex == -1
         ? addProduct(
             _titleTextController.text,
-            _formData['description'],
+            _descriptionTextController.text,
             _formData['image'],
             _formData['price'],
             _formData['location']
@@ -147,8 +153,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
             }
           })
         : updateProduct(
-            _formData['title'],
-            _formData['description'],
+            _titleTextController.text,
+            _descriptionTextController.text,
             _formData['image'],
             _formData['price'],
             _formData['location']
@@ -179,7 +185,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     SizedBox(height: 10.0),
                     ImageInput(),
                     SizedBox(height: 10.0),
-                    _buildSaveButton()
+                    _buildSaveButton(),
+                    SizedBox(height: 15.0)
                   ],
                 ))));
   }
