@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/scoped-models/connected_products.dart';
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 
 import './../models/product.dart';
 
@@ -39,7 +42,17 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(String title, String description, String image, double price, LocationData locData) async {
+  Future<Map<String, String>> uploadImage(File image, {String imagePath}) async {
+    final mimeTypeData = lookupMimeType(image.path).split('/');
+    final imageUploadRequest = http.MultipartRequest('POST', Uri.parse('https://us-central1-flutter-products-7ddd6.cloudfunctions.net/storeImage'));
+    final file = await http.MultipartFile.fromPath('image', image.path, contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+    imageUploadRequest.files.add(file);
+    if(imagePath != null) {
+      imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
+    }
+  }
+
+  Future<bool> addProduct(String title, String description, File image, double price, LocationData locData) async {
     isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
