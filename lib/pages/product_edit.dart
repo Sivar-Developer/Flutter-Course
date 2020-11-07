@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/models/product.dart';
@@ -19,7 +21,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'https://placekitten.com/1000/1000',
+    'image': null,
     'location': null
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -119,10 +121,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formData['location']  = locData;
   }
 
+  void _setImage(File image) {
+      _formData['image'] = image;
+  }
+
   _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState.validate() || (_formData['image'] == null && selectedProductIndex == -1)) {
       return;
     }
     _formKey.currentState.save();
@@ -183,7 +189,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildPriceTextField(model.selectedProduct),
                     LocationInput(_setLocation, model.selectedProduct),
                     SizedBox(height: 10.0),
-                    ImageInput(),
+                    ImageInput(_setImage, model.selectedProduct),
                     SizedBox(height: 10.0),
                     _buildSaveButton(),
                     SizedBox(height: 15.0)

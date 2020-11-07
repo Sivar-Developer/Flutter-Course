@@ -5,7 +5,8 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const fbAdmin = require('firebase-admin');
-const uuid = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
+const { Storage } = require('@google-cloud/storage');
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -19,7 +20,7 @@ const gcconfig = {
     keyfilename: 'flutter-products.json'
 };
 
-const gcs = require('@google-cloud/storage')(gcconfig);
+const gcs = new Storage(gcconfig);
 
 fbAdmin.initializeApp({ credential: fbAdmin.credential.cert(require('./flutter-products.json')) })
 
@@ -51,7 +52,7 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 
         busboy.on('finish', () => {
             const bucket = gcs.bucket('flutter-products-7ddd6.appspot.com/');
-            const id = uuid();
+            const id = uuidv4();
             let imagePath = 'images/' + id + '-' + uploadData.name
             if (oldImagePath) {
                 imagePath = oldImagePath;
