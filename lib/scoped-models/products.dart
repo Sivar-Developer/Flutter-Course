@@ -124,13 +124,27 @@ mixin ProductsModel on ConnectedProductsModel {
     }
   }
 
-  Future<bool> updateProduct(String title, String description, String image, double price, LocationData locData) {
+  Future<bool> updateProduct(String title, String description, File image, double price, LocationData locData) async {
     isLoading = true;
     notifyListeners();
+    String imageUrl = selectedProduct.image;
+    String imagePath = selectedProduct.imagePath;
+    if(image != null) {
+      final uploadData = await uploadImage(image);
+
+      if(uploadData == null) {
+        print('Upload failed');
+        return false;
+      }
+
+      imageUrl = uploadData['imageUrl'];
+      imagePath = uploadData['imagePath'];
+    }
     final Map<String, dynamic> updatedData = {
       'title': title,
       'description': description,
-      'image': image,
+      'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
@@ -138,28 +152,29 @@ mixin ProductsModel on ConnectedProductsModel {
       'userEmail': authenticatedUser.email,
       'userId': authenticatedUser.id
     };
-    return http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData))
-      .then((http.Response response) {
-        isLoading = false;
-        final Product updatedProduct = Product(
-          id: selectedProduct.id,
-          title: title,
-          description: description,
-          image: image,
-          price: price,
-          location: selectedProduct.location,
-          userEmail: authenticatedUser.email,
-          userId: authenticatedUser.id
-        );
-        products[selectedProductIndex] = updatedProduct;
-        notifyListeners();
-        return true;
-      })
-      .catchError((error) {
+
+    try {
+    final http.Response response = await http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData));
+      isLoading = false;
+      final Product updatedProduct = Product(
+        id: selectedProduct.id,
+        title: title,
+        description: description,
+        image: imageUrl,
+        imagePath: imagePath,
+        price: price,
+        location: selectedProduct.location,
+        userEmail: authenticatedUser.email,
+        userId: authenticatedUser.id
+      );
+      products[selectedProductIndex] = updatedProduct;
+      notifyListeners();
+      return true;
+    } catch (error) {
       isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 
   Future<bool> deleteProduct() {

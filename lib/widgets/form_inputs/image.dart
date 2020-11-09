@@ -30,6 +30,7 @@ class _ImageInputState extends State<ImageInput> {
   }
 
   void _openImagePicker(BuildContext context) {
+    final buttonColor = Theme.of(context).primaryColor;
     showModalBottomSheet(context: context, builder: (BuildContext context) {
       return Container(
         height: 150,
@@ -39,14 +40,14 @@ class _ImageInputState extends State<ImageInput> {
             Text('Pick an Image', style: TextStyle(fontWeight: FontWeight.bold),),
             SizedBox(height: 5.0),
             FlatButton(
-              textColor: Theme.of(context).primaryColor,
+              textColor: buttonColor,
               child: Text('Use camera'),
               onPressed: () {
                 _pickImage(ImageSource.camera);
               },
             ),
             FlatButton(
-              textColor: Theme.of(context).primaryColor,
+              textColor: buttonColor,
               child: Text('Use Gallery'),
               onPressed: () {
                 _pickImage(ImageSource.gallery);
@@ -60,36 +61,48 @@ class _ImageInputState extends State<ImageInput> {
 
   @override
   Widget build(BuildContext context) {
+  final buttonColor = Theme.of(context).primaryColor;
+  Widget previewImage = Text('Please select an image');
+
+  if(image != null) {
+    previewImage = Image.file(
+                      image,
+                      fit: BoxFit.cover,
+                      height: 300.0,
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.topCenter,
+                    );
+  } else if(widget.product != null) {
+    previewImage = Image.network(widget.product.image,
+                    fit: BoxFit.cover,
+                    height: 300.0,
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.topCenter,
+    );
+  }
+    
     return Column(
       children: <Widget>[
         OutlineButton(
           borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
+            color: buttonColor,
             width: 1.0
           ),
           onPressed: () => _openImagePicker(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.camera_alt, color: Theme.of(context).primaryColor),
+              Icon(Icons.camera_alt, color: buttonColor),
               SizedBox(width: 5.6),
               Text('Add Image', 
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor),
+                  color: buttonColor),
               ),
             ]
           ),
         ),
         SizedBox(height: 10.0),
-        image == null
-        ? Text('Please pick an image.')
-        : Image.file(
-            image,
-            fit: BoxFit.cover,
-            height: 300.0,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.topCenter,
-          )
+        previewImage
       ],
     );
   }
