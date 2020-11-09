@@ -15,7 +15,18 @@ class ProductFab extends StatefulWidget {
   }
 }
 
-class _ProductFabState extends State<ProductFab> {
+class _ProductFabState extends State<ProductFab> with TickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200)
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant(builder: (BuildContext context, Widget child, MainModel model) {
@@ -26,20 +37,26 @@ class _ProductFabState extends State<ProductFab> {
             height: 60.0,
             width: 56.0,
             alignment: FractionalOffset.topCenter,
-            child: FloatingActionButton(
-              backgroundColor: Theme.of(context).cardColor,
-              heroTag: 'contact',
-              mini: true,
-              onPressed: () async {
-                final url = 'mailto:${widget.product.userEmail}';
-                if(await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch!';
-                }
-              },
-              child: Icon(Icons.mail, color: Theme.of(context).accentColor),
-            ),
+            child: ScaleTransition(
+              scale: CurvedAnimation(
+                parent: _controller,
+                curve: Interval(0.2, 1.0, curve: Curves.easeOut)
+              ),
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).cardColor,
+                heroTag: 'contact',
+                mini: true,
+                onPressed: () async {
+                  final url = 'mailto:${widget.product.userEmail}';
+                  if(await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch!';
+                  }
+                },
+                child: Icon(Icons.mail, color: Theme.of(context).accentColor),
+              ),
+            ) 
           ),
           Container(
             height: 60.0,
@@ -64,7 +81,13 @@ class _ProductFabState extends State<ProductFab> {
             child: FloatingActionButton(
               backgroundColor: Theme.of(context).primaryColor,
               heroTag: 'options',
-              onPressed: () {},
+              onPressed: () {
+                if (_controller.isDismissed) {
+                  _controller.forward();
+                } else {
+                  _controller.reverse();
+                }
+              },
               child: Icon(Icons.more_vert),
             ),
           ),
