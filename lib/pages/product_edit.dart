@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_course/models/location_data.dart';
 import 'package:flutter_course/models/product.dart';
@@ -19,7 +21,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'https://placekitten.com/1000/1000',
+    'image': null,
     'location': null
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -27,6 +29,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
   final _titleTextController = TextEditingController();
+  final _descriptionTextController = TextEditingController();
 
   Widget _buildTitleTextField(Product product) {
     if(product == null && _titleTextController.text.trim() == '') {
@@ -56,12 +59,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildDescriptionTextField(Product product) {
+     if(product == null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = '';
+    } else if (product != null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = product.title;
+    }
     return EnsureVisibleWhenFocused(
         focusNode: _descriptionFocusNode,
         child: TextFormField(
           decoration: InputDecoration(labelText: 'Product Description'),
           maxLines: 4,
-          initialValue: product == null ? '' : product.description.toString(),
+          controller: _descriptionTextController,
           validator: (String value) {
             if (value.isEmpty || value.length < 5) {
               return 'Description is required and should be +5 characters long.';
@@ -113,17 +121,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formData['location']  = locData;
   }
 
+  void _setImage(File image) {
+      _formData['image'] = image;
+  }
+
   _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState.validate() || (_formData['image'] == null && selectedProductIndex == -1)) {
       return;
     }
     _formKey.currentState.save();
     selectedProductIndex == -1
         ? addProduct(
             _titleTextController.text,
-            _formData['description'],
+            _descriptionTextController.text,
             _formData['image'],
             _formData['price'],
             _formData['location']
@@ -147,8 +159,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
             }
           })
         : updateProduct(
-            _formData['title'],
-            _formData['description'],
+            _titleTextController.text,
+            _descriptionTextController.text,
             _formData['image'],
             _formData['price'],
             _formData['location']
@@ -177,9 +189,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _buildPriceTextField(model.selectedProduct),
                     LocationInput(_setLocation, model.selectedProduct),
                     SizedBox(height: 10.0),
-                    ImageInput(),
+                    ImageInput(_setImage, model.selectedProduct),
                     SizedBox(height: 10.0),
-                    _buildSaveButton()
+                    _buildSaveButton(),
+                    SizedBox(height: 15.0)
                   ],
                 ))));
   }
