@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/widgets/products/address_tag.dart';
 import 'package:flutter_course/widgets/products/price_tag.dart';
+import 'package:flutter_course/widgets/products/product_fab.dart';
 import 'package:flutter_course/widgets/ui_elements/title_default.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/product.dart';
@@ -118,6 +119,7 @@ class ProductPageState extends State<ProductPage> {
           )
         ],
         ),
+        floatingActionButton: ProductFab()
       )
     );
   }
