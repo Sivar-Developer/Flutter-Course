@@ -119,7 +119,7 @@ class ProductPageState extends State<ProductPage> {
           )
         ],
         ),
-        floatingActionButton: ProductFab()
+        floatingActionButton: ProductFab(widget.product)
       )
     );
   }
