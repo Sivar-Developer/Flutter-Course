@@ -40,7 +40,7 @@ class _ProductFabState extends State<ProductFab> with TickerProviderStateMixin {
             child: ScaleTransition(
               scale: CurvedAnimation(
                 parent: _controller,
-                curve: Interval(0.2, 1.0, curve: Curves.easeOut)
+                curve: Interval(0.0, 1.0, curve: Curves.easeOut)
               ),
               child: FloatingActionButton(
                 backgroundColor: Theme.of(context).cardColor,
@@ -62,18 +62,24 @@ class _ProductFabState extends State<ProductFab> with TickerProviderStateMixin {
             height: 60.0,
             width: 56.0,
             alignment: FractionalOffset.topCenter,
-            child: FloatingActionButton(
-              backgroundColor: Theme.of(context).cardColor,
-              heroTag: 'favorite',
-              mini: true,
-              onPressed: () {
-                model.toggleProductFavoriteStatus();
-              },
-              child: Icon(
-                model.selectedProduct.isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: Theme.of(context).accentColor
+            child: ScaleTransition(
+              scale: CurvedAnimation(
+                parent: _controller,
+                curve: Interval(0.0, 1.0, curve: Curves.easeOut)
               ),
-            ),
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).cardColor,
+                heroTag: 'favorite',
+                mini: true,
+                onPressed: () {
+                  model.toggleProductFavoriteStatus();
+                },
+                child: Icon(
+                  model.selectedProduct.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: Theme.of(context).accentColor
+                ),
+              ),
+            ) 
           ),
           Container(
             height: 70.0,
