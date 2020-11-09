@@ -32,6 +32,7 @@ dependencies:
   image_picker: ^0.6.7+12
   image_cropper: ^1.0.2
   mime: ^0.9.7
+  url_launcher: ^5.7.10
 
 
   # The following adds the Cupertino Icons font to your application.
