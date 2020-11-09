@@ -42,7 +42,7 @@ mixin ProductsModel on ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Map<String, String>> uploadImage(File image, {String imagePath}) async {
+  Future<Map<String, dynamic>> uploadImage(File image, {String imagePath}) async {
     final mimeTypeData = lookupMimeType(image.path).split('/');
     final imageUploadRequest = http.MultipartRequest('POST', Uri.parse('https://us-central1-flutter-products-7ddd6.cloudfunctions.net/storeImage'));
     final file = await http.MultipartFile.fromPath('image', image.path, contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
@@ -82,7 +82,6 @@ mixin ProductsModel on ConnectedProductsModel {
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image': image,
       'imagePath': uploadData['imagePath'],
       'imageUrl': uploadData['imageUrl'],
       'price': price,
@@ -111,6 +110,7 @@ mixin ProductsModel on ConnectedProductsModel {
         userEmail: authenticatedUser.email,
         userId: authenticatedUser.id
       );
+      // print(product.image);
       products.add(product);
       isLoading = false;
       notifyListeners();
@@ -198,7 +198,7 @@ mixin ProductsModel on ConnectedProductsModel {
           id: productId,
           title: productData['title'],
           description: productData['description'],
-          image: productData['image'],
+          image: productData['imageUrl'],
           price: productData['price'],
           location: LocationData(address: productData['loc_address'], latitude: productData['loc_lat'], longitude: productData['loc_lng']),
           userEmail: productData['userEmail'],
