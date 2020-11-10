@@ -99,13 +99,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
           // initialValue: product == null ? '' : product.price.toString(),
           validator: (String value) {
             if (value.isEmpty ||
-                !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
+                !RegExp(r'^(?:[1-9]\d*|0)?(?:[.,]\d+)?$').hasMatch(value)) {
               return 'Price is required and should be a number.';
             }
             return null;
-          },
-          onSaved: (String value) {
-            _formData['price'] = double.parse(value);
           },
         ));
   }
@@ -147,7 +144,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             _titleTextController.text,
             _descriptionTextController.text,
             _formData['image'],
-            double.parse(_priceTextController.text),
+            double.parse(_priceTextController.text.replaceFirst(RegExp(r','), '.')),
             _formData['location']
           ).then((bool success) {
             if (success) {
@@ -172,7 +169,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             _titleTextController.text,
             _descriptionTextController.text,
             _formData['image'],
-            double.parse(_priceTextController.text),
+            double.parse(_priceTextController.text.replaceFirst(RegExp(r','), '.')),
             _formData['location']
           ).then((_) => Navigator.pushReplacementNamed(context, '/products')
             .then((_) => setSelectedProduct(null)));
