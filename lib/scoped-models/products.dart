@@ -272,6 +272,7 @@ mixin ProductsModel on ConnectedProductsModel {
         products[selectedProductIndex] = updatedProduct;
         notifyListeners();
       }
+      selProductId = null;
   }
 
   void toggleDisplayMode() {
