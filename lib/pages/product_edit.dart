@@ -8,6 +8,7 @@ import 'package:flutter_course/scoped-models/main.dart';
 import 'package:flutter_course/widgets/form_inputs/image.dart';
 import 'package:flutter_course/widgets/form_inputs/location.dart';
 import 'package:flutter_course/widgets/helpers/ensure_visible.dart';
+import 'package:flutter_course/widgets/ui_elements/adaptive_progress_indicator.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ProductEditPage extends StatefulWidget {
@@ -112,7 +113,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
       return model.isLoading
-          ? Center(child: Theme.of(context).platform == TargetPlatform.iOS ? CupertinoActivityIndicator() : CircularProgressIndicator())
+          ? Center(child: AdaptiveProgressIndicator())
           : RaisedButton(
               textColor: Colors.white,
               child: Text('Save'),
