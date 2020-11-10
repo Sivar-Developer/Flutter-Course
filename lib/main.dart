@@ -9,6 +9,7 @@ import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/products.dart';
 import './pages/product.dart';
+import './widgets/helpers/custom_route.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
@@ -57,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         },
         onGenerateRoute: (RouteSettings settings) {
           if(!_isAuthenticated) {
-            return MaterialPageRoute(
+            return CustomRoute(
             builder: (BuildContext context) => AuthPage(),
           );
           }
@@ -68,14 +69,14 @@ class _MyAppState extends State<MyApp> {
           if (pathElement[1] == 'product') {
             final String productId = pathElement[2];
             final Product product = _model.allProducts.firstWhere((Product product) => product.id == productId);
-            return MaterialPageRoute<bool>(
+            return CustomRoute<bool>(
                         builder: (BuildContext context) => !_isAuthenticated ? AuthPage() : ProductPage(product)
                       );
           }
           return null;
         },
         onUnknownRoute: (RouteSettings settings) {
-          return MaterialPageRoute(
+          return CustomRoute(
             builder: (BuildContext context) => !_isAuthenticated ? AuthPage() : ProductsPage(_model),
           );
         },

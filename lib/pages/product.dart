@@ -100,7 +100,7 @@ class ProductPageState extends State<ProductPage> {
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 200.0,
+              expandedHeight: 220.0,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(widget.product.title),
