@@ -28,6 +28,7 @@ dependencies:
   shared_preferences: ^0.5.12+2
   rxdart: ^0.24.1
   location: ^3.0.0
+  location_web: ^1.0.0
   google_maps_flutter: ^1.0.5
   image_picker: ^0.6.7+12
   image_cropper: ^1.0.2
