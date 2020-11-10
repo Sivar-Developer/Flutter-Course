@@ -37,7 +37,10 @@ class ProductCard extends StatelessWidget {
             icon: Icon(Icons.info),
             color: Theme.of(context).primaryColor,
             iconSize: 30,
-            onPressed: () => Navigator.pushNamed<bool>(context, '/product/' + model.allProducts[productIndex].id).then((_) => model.selectProduct(null))
+            onPressed: () {
+              model.selectProduct(model.allProducts[productIndex].id);
+              Navigator.pushNamed<bool>(context, '/product/' + model.allProducts[productIndex].id).then((_) => model.selectProduct(null));
+            }
           ),
           IconButton(
               icon: Icon(model.allProducts[productIndex].isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -58,9 +61,12 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          FadeInImage(
-            image: NetworkImage(product.image),
-            placeholder: AssetImage('assets/placeholder.png'),
+          Hero(
+            tag: product.id,
+            child: FadeInImage(
+              image: NetworkImage(product.image),
+              placeholder: AssetImage('assets/placeholder.png'),
+            ),
           ),
           _buildTitlePriceRow(),
           AddressTag(product.location.address),

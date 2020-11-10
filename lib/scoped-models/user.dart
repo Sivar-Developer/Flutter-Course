@@ -58,6 +58,8 @@ mixin UserModel on ConnectedProductsModel {
       message = 'This email was not found.';
     } else if(responseData['error']['message'] == 'INVALID_PASSWORD') {
       message = 'The password is invalid.';
+    } else if(responseData['error']['message'].isNotEmpty) {
+      print(responseData['error']['message']);
     }
     isLoading = false;
     notifyListeners();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/widgets/products/address_tag.dart';
 import 'package:flutter_course/widgets/products/price_tag.dart';
+import 'package:flutter_course/widgets/products/product_fab.dart';
 import 'package:flutter_course/widgets/ui_elements/title_default.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/product.dart';
@@ -93,31 +94,44 @@ class ProductPageState extends State<ProductPage> {
       Navigator.pop(context, false);
       return Future.value(true);
     }, child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.product.title),
-        ),
-        body: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-          FadeInImage(
-            image: NetworkImage(widget.product.image),
-            placeholder: AssetImage('assets/placeholder.png'),
-          ),
-          _buildTitlePriceRow(widget.product.price, widget.product.title),
-          GestureDetector(
-            onTap: () => _showMap(context),
-            child: AddressTag(widget.product.location.address),
-          ),
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              widget.product.description,
-              textAlign: TextAlign.center
+        // appBar: AppBar(
+        //   title: Text(widget.product.title),
+        // ),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 220.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(widget.product.title),
+                background: Hero(
+                  tag: widget.product.id,
+                  child: FadeInImage(
+                    image: NetworkImage(widget.product.image),
+                    placeholder: AssetImage('assets/placeholder.png'),
+                  ),
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                _buildTitlePriceRow(widget.product.price, widget.product.title),
+                GestureDetector(
+                  onTap: () => _showMap(context),
+                  child: AddressTag(widget.product.location.address),
+                ),
+                Container(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  widget.product.description,
+                  textAlign: TextAlign.center
+                  )
+                ),
+              ]),
             )
-          )
-        ],
+          ],
         ),
+        floatingActionButton: ProductFab(widget.product)
       )
     );
   }
