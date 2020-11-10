@@ -34,9 +34,9 @@ class _MyAppState extends State<MyApp> {
     String batteryLevel;
     try {
       final int result = await _platformChannel.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level is $result %.';
+      batteryLevel = 'Battery level is ${result.toString()} %.';
     } catch (error) {
-      batteryLevel = 'Failed to get battery level';
+      batteryLevel = error.toString();
     }
     print(batteryLevel);
   }
@@ -49,6 +49,7 @@ class _MyAppState extends State<MyApp> {
         _isAuthenticated = isAuthenticated;
       });
     });
+    _getBatteryLevel();
     super.initState();
   }
 
