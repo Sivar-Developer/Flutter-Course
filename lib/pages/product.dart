@@ -101,9 +101,12 @@ class ProductPageState extends State<ProductPage> {
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-          FadeInImage(
-            image: NetworkImage(widget.product.image),
-            placeholder: AssetImage('assets/placeholder.png'),
+          Hero(
+            tag: widget.product.id,
+            child: FadeInImage(
+              image: NetworkImage(widget.product.image),
+              placeholder: AssetImage('assets/placeholder.png'),
+            ),
           ),
           _buildTitlePriceRow(widget.product.price, widget.product.title),
           GestureDetector(
