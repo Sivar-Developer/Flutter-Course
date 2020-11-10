@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/env/adaptive_theme.dart';
 import 'package:flutter_course/models/product.dart';
 import 'package:flutter_course/pages/map.dart';
 // import 'package:flutter/rendering.dart';
@@ -43,14 +44,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
-        theme: ThemeData(
-          // brightness: Brightness.dark,
-          primarySwatch: Colors.deepPurple,
-          accentColor: Colors.deepOrange,
-          buttonColor: Colors.deepPurple,
-          // buttonTheme: ButtonThemeData(textTheme: TextTheme())
-          // fontFamily: 'Oswald'
-        ),
+        theme: getAdaptiveThemeDta(context),
         routes: {
           '/': (BuildContext context) => !_isAuthenticated ? AuthPage() : ProductsPage(_model),
           '/map': (BuildContext context) => !_isAuthenticated ? AuthPage() : MapPage(),

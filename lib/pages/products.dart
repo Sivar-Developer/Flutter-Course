@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/scoped-models/main.dart';
 import 'package:flutter_course/widgets/products/products.dart';
+import 'package:flutter_course/widgets/ui_elements/adaptive_progress_indicator.dart';
 import 'package:flutter_course/widgets/ui_elements/logout_list_tile.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -29,6 +30,7 @@ class _ProductsPageState extends State<ProductsPage> {
           AppBar(
             automaticallyImplyLeading: false,
             title: Text('Choose'),
+            elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 3.0,
           ),
           ListTile(
             leading: Icon(Icons.edit),
@@ -57,7 +59,7 @@ class _ProductsPageState extends State<ProductsPage> {
       if(model.displayedProducts.length > 0 && !model.isLoading) {
         content = Products();
       } else if(model.isLoading) {
-        content = Center(child: CircularProgressIndicator());
+        content = Center(child: AdaptiveProgressIndicator());
       }
       return RefreshIndicator(onRefresh: model.fetchProducts, child: content);
     });
@@ -69,6 +71,7 @@ class _ProductsPageState extends State<ProductsPage> {
         drawer: _buildSideDrawer(context),
         appBar: AppBar(
           title: Text('Home'),
+          elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 3.0,
           actions: <Widget>[
             ScopedModelDescendant<MainModel>(builder: (BuildContext context, Widget child, MainModel model) {
               return IconButton(
