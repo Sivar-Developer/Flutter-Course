@@ -197,9 +197,11 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts({onlyForUser = false}) {
+  Future<Null> fetchProducts({onlyForUser = false, clearExisting = false}) {
     isLoading  = true;
-    products = [];
+    if(clearExisting) {
+      products = [];
+    }
     notifyListeners();
     return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json?auth=${authenticatedUser.token}')
     .then<Null>((http.Response response) {
