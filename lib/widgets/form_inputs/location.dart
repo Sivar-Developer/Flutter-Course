@@ -6,8 +6,8 @@ import 'package:flutter_course/models/product.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as geoloc;
-
 import '../helpers/ensure_visible.dart';
+import 'package:flutter_course/env/config.dart' as config;
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
@@ -48,7 +48,7 @@ class _LocationInputState extends State<LocationInput> {
         final Uri uri = Uri.https(
           'maps.googleapis.com',
           '/maps/api/geocode/json',
-          {'address': address, 'key': 'AIzaSyB4qGTCPJNlRkroSxsoqYm_xnPUruCdK3E'}
+          {'address': address, 'key': config.googleMapApiKey}
         );
         final http.Response response  = await http.get(uri);
         final decodedResponse = json.decode(response.body);
@@ -83,7 +83,7 @@ class _LocationInputState extends State<LocationInput> {
     final uri = Uri.https(
           'maps.googleapis.com',
           '/maps/api/geocode/json',
-          {'latlng': '${lat.toString()},${lng.toString()}', 'key': 'AIzaSyB4qGTCPJNlRkroSxsoqYm_xnPUruCdK3E'}
+          {'latlng': '${lat.toString()},${lng.toString()}', 'key': config.googleMapApiKey}
         );
     final http.Response response = await http.get(uri);
     final decodedResponse = json.decode(response.body);
@@ -92,9 +92,24 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   void _getUserLocation() async {
-    final currentLocation = await geoloc.Location().getLocation();
-    final address = await _getAddress(currentLocation.latitude, currentLocation.longitude);
-    _getLocationMarker(address, geocode: false, lat: currentLocation.latitude, lng: currentLocation.longitude);
+    try {
+      final currentLocation = await geoloc.Location().getLocation();
+      final address = await _getAddress(currentLocation.latitude, currentLocation.longitude);
+      _getLocationMarker(address, geocode: false, lat: currentLocation.latitude, lng: currentLocation.longitude);
+    } catch(error) {
+      showDialog(context: context, builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Could not fetch user location'),
+          content: Text('Please add address manually'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Okey'),
+            )
+          ],
+          );
+      });
+    }
   }
 
   void _updateLocation() {
@@ -116,6 +131,7 @@ class _LocationInputState extends State<LocationInput> {
               if(_locationData == null ||  value.isEmpty) {
                 return 'No valid location found';
               }
+              return null;
             },
             decoration: InputDecoration(labelText: 'Address'),
           )

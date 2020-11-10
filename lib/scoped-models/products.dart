@@ -154,7 +154,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
 
     try {
-    final http.Response response = await http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData));
+      await http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData));
       isLoading = false;
       final Product updatedProduct = Product(
         id: selectedProduct.id,
@@ -197,8 +197,11 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts({onlyForUser = false}) {
+  Future<Null> fetchProducts({onlyForUser = false, clearExisting = false}) {
     isLoading  = true;
+    if(clearExisting) {
+      products = [];
+    }
     notifyListeners();
     return http.get('https://flutter-products-7ddd6.firebaseio.com/products.json?auth=${authenticatedUser.token}')
     .then<Null>((http.Response response) {
@@ -272,6 +275,7 @@ mixin ProductsModel on ConnectedProductsModel {
         products[selectedProductIndex] = updatedProduct;
         notifyListeners();
       }
+      selProductId = null;
   }
 
   void toggleDisplayMode() {
