@@ -20,9 +20,11 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
   final TextEditingController _passwordTextController = TextEditingController();
   AuthMode _authMode = AuthMode.Login;
   AnimationController _controller;
+  Animation<Offset> _slideAnimation;
 
   void initState() {
     _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _slideAnimation = Tween<Offset>(begin: Offset(0.0, -2.0), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
     super.initState();
   }
 
@@ -73,20 +75,23 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
         parent: _controller,
         curve: Curves.easeIn
       ),
-      child: TextFormField(
-        decoration: InputDecoration(labelText: 'Confirmed Password', filled: true, fillColor: Colors.white.withOpacity(0.8)),
-        obscureText: true,
-        validator: (String value) {
-          if(_authMode == AuthMode.Signup) {
-            if (_passwordTextController.text != value) {
-              return 'Passwords do not match';
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: TextFormField(
+          decoration: InputDecoration(labelText: 'Confirmed Password', filled: true, fillColor: Colors.white.withOpacity(0.8)),
+          obscureText: true,
+          validator: (String value) {
+            if(_authMode == AuthMode.Signup) {
+              if (_passwordTextController.text != value) {
+                return 'Passwords do not match';
+              }
+              if (value.isEmpty || value.length < 6) {
+                return 'Password invalid';
+              }
             }
-            if (value.isEmpty || value.length < 6) {
-              return 'Password invalid';
-            }
-          }
-        },
-      ),
+          },
+        )
+      )
     );
   }
 
