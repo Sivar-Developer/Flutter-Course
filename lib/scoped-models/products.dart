@@ -154,7 +154,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
 
     try {
-    final http.Response response = await http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData));
+      await http.put('https://flutter-products-7ddd6.firebaseio.com/products/${selectedProduct.id}.json?auth=${authenticatedUser.token}', body: json.encode(updatedData));
       isLoading = false;
       final Product updatedProduct = Product(
         id: selectedProduct.id,

@@ -131,6 +131,7 @@ class _LocationInputState extends State<LocationInput> {
               if(_locationData == null ||  value.isEmpty) {
                 return 'No valid location found';
               }
+              return null;
             },
             decoration: InputDecoration(labelText: 'Address'),
           )

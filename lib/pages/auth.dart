@@ -46,6 +46,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 .hasMatch(value)) {
           return 'Please enter a valid email';
         }
+        return null;
       },
       onSaved: (String value) {
         _formData['email'] = value;
@@ -62,6 +63,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
         if (value.isEmpty || value.length < 6) {
           return 'Password invalid';
         }
+        return null;
       },
       onSaved: (String value) {
         _formData['password'] = value;
@@ -89,6 +91,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 return 'Password invalid';
               }
             }
+            return null;
           },
         )
       )

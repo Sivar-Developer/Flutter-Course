@@ -51,6 +51,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
           if (value.isEmpty || value.length < 5) {
             return 'Title is required and should be +5 characters long.';
           }
+          return null;
         },
         onSaved: (String value) {
           _formData['title'] = value;
@@ -75,6 +76,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             if (value.isEmpty || value.length < 5) {
               return 'Description is required and should be +5 characters long.';
             }
+            return null;
           },
           onSaved: (String value) {
             _formData['description'] = value;
@@ -100,6 +102,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                 !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
               return 'Price is required and should be a number.';
             }
+            return null;
           },
           onSaved: (String value) {
             _formData['price'] = double.parse(value);
